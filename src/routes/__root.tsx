@@ -11,6 +11,8 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { useAuthStore } from "@/store/auth-store";
+import { Toaster } from "@/components/ui/sonner";
 
 function NotFoundComponent() {
   return (
@@ -77,14 +79,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Graphyx   — Premium Online Learning Platform" },
-      { name: "description", content: "Upgrade your skills with premium online courses, certifications, and expert-led learning paths on Graphyx  ." },
-      { property: "og:title", content: "Graphyx   — Premium Online Learning Platform" },
-      { property: "og:description", content: "Upgrade your skills with premium online courses, certifications, and expert-led learning paths on Graphyx  ." },
+      { title: "Graphyx — Premium Online Learning Platform" },
+      { name: "description", content: "Upgrade your skills with premium online courses, certifications, and expert-led learning paths on Graphyx." },
+      { property: "og:title", content: "Graphyx — Premium Online Learning Platform" },
+      { property: "og:description", content: "Upgrade your skills with premium online courses, certifications, and expert-led learning paths on Graphyx." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "Graphyx   — Premium Online Learning Platform" },
-      { name: "twitter:description", content: "Upgrade your skills with premium online courses, certifications, and expert-led learning paths on Graphyx  ." },
+      { name: "twitter:title", content: "Graphyx — Premium Online Learning Platform" },
+      { name: "twitter:description", content: "Upgrade your skills with premium online courses, certifications, and expert-led learning paths on Graphyx." },
       { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/e3a7cd0a-8fcf-4f82-827a-580c16b37fc8/id-preview-77127e83--a4b6efdb-151f-4443-9c59-db6fe42aeb5d.lovable.app-1781939992998.png" },
       { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/e3a7cd0a-8fcf-4f82-827a-580c16b37fc8/id-preview-77127e83--a4b6efdb-151f-4443-9c59-db6fe42aeb5d.lovable.app-1781939992998.png" },
     ],
@@ -120,11 +122,17 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const initialize = useAuthStore((state) => state.initialize);
+
+  // Initialize auth on mount
+  useEffect(() => {
+    initialize();
+  }, [initialize]);
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
+      <Toaster position="top-right" />
     </QueryClientProvider>
   );
 }
