@@ -12,6 +12,8 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
+import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
@@ -41,20 +43,30 @@ const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
   path: '/forgot-password',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardIndexRoute = DashboardIndexRouteImport.update({
-  id: '/dashboard/',
-  path: '/dashboard/',
-  getParentRoute: () => rootRouteImport,
+  id: '/',
+  path: '/',
+  getParentRoute: () => DashboardRoute,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
-  id: '/admin/',
-  path: '/admin/',
-  getParentRoute: () => rootRouteImport,
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
 } as any)
 const PaymentSuccessRoute = PaymentSuccessRouteImport.update({
   id: '/payment/success',
@@ -67,19 +79,19 @@ const PaymentCancelRoute = PaymentCancelRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardSettingsRoute = DashboardSettingsRouteImport.update({
-  id: '/dashboard/settings',
-  path: '/dashboard/settings',
-  getParentRoute: () => rootRouteImport,
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => DashboardRoute,
 } as any)
 const DashboardCoursesRoute = DashboardCoursesRouteImport.update({
-  id: '/dashboard/courses',
-  path: '/dashboard/courses',
-  getParentRoute: () => rootRouteImport,
+  id: '/courses',
+  path: '/courses',
+  getParentRoute: () => DashboardRoute,
 } as any)
 const DashboardCertificatesRoute = DashboardCertificatesRouteImport.update({
-  id: '/dashboard/certificates',
-  path: '/dashboard/certificates',
-  getParentRoute: () => rootRouteImport,
+  id: '/certificates',
+  path: '/certificates',
+  getParentRoute: () => DashboardRoute,
 } as any)
 const CoursesSlugRoute = CoursesSlugRouteImport.update({
   id: '/courses/$slug',
@@ -92,14 +104,14 @@ const AuthCallbackRoute = AuthCallbackRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminStudentsRoute = AdminStudentsRouteImport.update({
-  id: '/admin/students',
-  path: '/admin/students',
-  getParentRoute: () => rootRouteImport,
+  id: '/students',
+  path: '/students',
+  getParentRoute: () => AdminRoute,
 } as any)
 const AdminCoursesRoute = AdminCoursesRouteImport.update({
-  id: '/admin/courses',
-  path: '/admin/courses',
-  getParentRoute: () => rootRouteImport,
+  id: '/courses',
+  path: '/courses',
+  getParentRoute: () => AdminRoute,
 } as any)
 const CoursesSlugLearnRoute = CoursesSlugLearnRouteImport.update({
   id: '/learn',
@@ -109,6 +121,8 @@ const CoursesSlugLearnRoute = CoursesSlugLearnRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/dashboard': typeof DashboardRouteWithChildren
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
@@ -146,6 +160,8 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/dashboard': typeof DashboardRouteWithChildren
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
@@ -166,6 +182,8 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
+    | '/dashboard'
     | '/forgot-password'
     | '/login'
     | '/signup'
@@ -202,6 +220,8 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/admin'
+    | '/dashboard'
     | '/forgot-password'
     | '/login'
     | '/signup'
@@ -221,20 +241,15 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRouteWithChildren
+  DashboardRoute: typeof DashboardRouteWithChildren
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   LoginRoute: typeof LoginRoute
   SignupRoute: typeof SignupRoute
-  AdminCoursesRoute: typeof AdminCoursesRoute
-  AdminStudentsRoute: typeof AdminStudentsRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
   CoursesSlugRoute: typeof CoursesSlugRouteWithChildren
-  DashboardCertificatesRoute: typeof DashboardCertificatesRoute
-  DashboardCoursesRoute: typeof DashboardCoursesRoute
-  DashboardSettingsRoute: typeof DashboardSettingsRoute
   PaymentCancelRoute: typeof PaymentCancelRoute
   PaymentSuccessRoute: typeof PaymentSuccessRoute
-  AdminIndexRoute: typeof AdminIndexRoute
-  DashboardIndexRoute: typeof DashboardIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -260,6 +275,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -269,17 +298,17 @@ declare module '@tanstack/react-router' {
     }
     '/dashboard/': {
       id: '/dashboard/'
-      path: '/dashboard'
+      path: '/'
       fullPath: '/dashboard/'
       preLoaderRoute: typeof DashboardIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof DashboardRoute
     }
     '/admin/': {
       id: '/admin/'
-      path: '/admin'
+      path: '/'
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/payment/success': {
       id: '/payment/success'
@@ -297,24 +326,24 @@ declare module '@tanstack/react-router' {
     }
     '/dashboard/settings': {
       id: '/dashboard/settings'
-      path: '/dashboard/settings'
+      path: '/settings'
       fullPath: '/dashboard/settings'
       preLoaderRoute: typeof DashboardSettingsRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof DashboardRoute
     }
     '/dashboard/courses': {
       id: '/dashboard/courses'
-      path: '/dashboard/courses'
+      path: '/courses'
       fullPath: '/dashboard/courses'
       preLoaderRoute: typeof DashboardCoursesRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof DashboardRoute
     }
     '/dashboard/certificates': {
       id: '/dashboard/certificates'
-      path: '/dashboard/certificates'
+      path: '/certificates'
       fullPath: '/dashboard/certificates'
       preLoaderRoute: typeof DashboardCertificatesRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof DashboardRoute
     }
     '/courses/$slug': {
       id: '/courses/$slug'
@@ -332,17 +361,17 @@ declare module '@tanstack/react-router' {
     }
     '/admin/students': {
       id: '/admin/students'
-      path: '/admin/students'
+      path: '/students'
       fullPath: '/admin/students'
       preLoaderRoute: typeof AdminStudentsRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/admin/courses': {
       id: '/admin/courses'
-      path: '/admin/courses'
+      path: '/courses'
       fullPath: '/admin/courses'
       preLoaderRoute: typeof AdminCoursesRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/courses/$slug/learn': {
       id: '/courses/$slug/learn'
@@ -353,6 +382,38 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface AdminRouteChildren {
+  AdminCoursesRoute: typeof AdminCoursesRoute
+  AdminStudentsRoute: typeof AdminStudentsRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminCoursesRoute: AdminCoursesRoute,
+  AdminStudentsRoute: AdminStudentsRoute,
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
+interface DashboardRouteChildren {
+  DashboardCertificatesRoute: typeof DashboardCertificatesRoute
+  DashboardCoursesRoute: typeof DashboardCoursesRoute
+  DashboardSettingsRoute: typeof DashboardSettingsRoute
+  DashboardIndexRoute: typeof DashboardIndexRoute
+}
+
+const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardCertificatesRoute: DashboardCertificatesRoute,
+  DashboardCoursesRoute: DashboardCoursesRoute,
+  DashboardSettingsRoute: DashboardSettingsRoute,
+  DashboardIndexRoute: DashboardIndexRoute,
+}
+
+const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
+  DashboardRouteChildren,
+)
 
 interface CoursesSlugRouteChildren {
   CoursesSlugLearnRoute: typeof CoursesSlugLearnRoute
@@ -368,20 +429,15 @@ const CoursesSlugRouteWithChildren = CoursesSlugRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRouteWithChildren,
+  DashboardRoute: DashboardRouteWithChildren,
   ForgotPasswordRoute: ForgotPasswordRoute,
   LoginRoute: LoginRoute,
   SignupRoute: SignupRoute,
-  AdminCoursesRoute: AdminCoursesRoute,
-  AdminStudentsRoute: AdminStudentsRoute,
   AuthCallbackRoute: AuthCallbackRoute,
   CoursesSlugRoute: CoursesSlugRouteWithChildren,
-  DashboardCertificatesRoute: DashboardCertificatesRoute,
-  DashboardCoursesRoute: DashboardCoursesRoute,
-  DashboardSettingsRoute: DashboardSettingsRoute,
   PaymentCancelRoute: PaymentCancelRoute,
   PaymentSuccessRoute: PaymentSuccessRoute,
-  AdminIndexRoute: AdminIndexRoute,
-  DashboardIndexRoute: DashboardIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
